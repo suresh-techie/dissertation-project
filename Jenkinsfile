@@ -1,10 +1,12 @@
-/* Requires the Docker Pipeline plugin */
 pipeline {
-    agent { docker { image 'python:3.13.2-alpine3.21' } }
+    agent { label 'Built-In Node' }  // Assign the job to a specific local agent
+
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
-                sh 'python --version'
+                script {
+                    echo "Running on my-local-agent"
+                }
             }
         }
     }
