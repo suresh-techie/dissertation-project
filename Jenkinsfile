@@ -6,7 +6,6 @@ pipeline {
             steps {
                 script {
                     echo "Running on my-local-agent"
-					sh 'pwd'
 					sh 'python ./sample_test.py'
                 }
             }
