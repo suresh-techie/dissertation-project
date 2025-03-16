@@ -4,8 +4,14 @@ import csv
 import re
 import os
 import nltk
-nltk.download('stopwords', quiet=True)
-nltk.download('punkt_tab', quiet=True)
+nltk_data_dir = os.getcwd()
+nltk.data.path.append(nltk_data_dir)
+
+# nltk_data_dir = "C:/nltk_data"
+
+nltk.download('stopwords', download_dir=nltk_data_dir, quiet=True)
+nltk.download('punkt_tab', download_dir=nltk_data_dir, quiet=True)
+
 import pickle
 
 log_dir = r"output.log"
