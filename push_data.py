@@ -6,6 +6,7 @@ import os
 import nltk
 nltk_data_dir = os.getcwd()
 nltk.data.path.append(nltk_data_dir)
+import sklearn
 
 # nltk_data_dir = "C:/nltk_data"
 
