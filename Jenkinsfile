@@ -13,7 +13,7 @@ pipeline {
                     echo "Running on my-local-agent"
                     echo "Build Number: ${env.BUILD_NUMBER}"
                     bat "${PYTHON_PATH} -m pytest ./test1.py > output.log 2>&1"
-                    bat "curl -X POST http://127.0.0.1:5000/api/update_failures -H \"Content-Type: application/json\" -d \"{\\\"failure_data\\\": {\\\"failures\\\": [{\\\"category\\\": \\\"Build Failure\\\", \\\"count\\\": 10, \\\"testname\\\": \\\"Test A\\\"}, {\\\"category\\\": \\\"Test Error\\\", \\\"count\\\": 5, \\\"testname\\\": \\\"Test B\\\"}, {\\\"category\\\": \\\"Warning\\\", \\\"count\\\": 3, \\\"testname\\\": \\\"Test C\\\"}, {\\\"category\\\": \\\"Dependency Issue\\\", \\\"count\\\": 9}]}}\""
+                    bat "${PYTHON_PATH} push_data.py"
                 }
             }
         }
