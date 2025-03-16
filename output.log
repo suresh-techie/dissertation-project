@@ -1,0 +1,225 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.4, pytest-7.4.3, pluggy-1.3.0
+rootdir: C:\ProgramData\Jenkins\.jenkins\workspace\_Automation_Dissertation_project
+plugins: allure-pytest-2.13.5, anyio-4.5.0, xdist-3.6.1
+collected 1 item
+
+test1.py F                                                               [100%]
+
+================================== FAILURES ===================================
+___________________________ test1_open_browser_url ____________________________
+
+    def test1_open_browser_url():
+        text_box = "ta"
+        driver = webdriver.Chrome()
+        driver.get("https://omayo.blogspot.com/")
+        driver.maximize_window()
+        # driver.implicitly_wait(10)
+        time.sleep(10)
+>       driver.find_element(By.ID, text_box).send_keys("This is for testing..")
+
+test1.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Suresh\AppData\Local\Programs\Python\Python311\Lib\site-packages\selenium\webdriver\remote\webdriver.py:741: in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+C:\Users\Suresh\AppData\Local\Programs\Python\Python311\Lib\site-packages\selenium\webdriver\remote\webdriver.py:347: in execute
+    self.error_handler.check_response(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x000001A6E885FDD0>
+response = {'status': 404, 'value': '{"value":{"error":"no such element","message":"no such element: Unable to locate element: {\...07FF75D05C2C9]\\n\\tBaseThreadInitThunk [0x00007FF8A2BE259D+29]\\n\\tRtlUserThreadStart [0x00007FF8A38AAF38+40]\\n"}}'}
+
+    def check_response(self, response: Dict[str, Any]) -> None:
+        """Checks that a JSON response from the WebDriver does not have an
+        error.
+    
+        :Args:
+         - response - The JSON response from the WebDriver server as a dictionary
+           object.
+    
+        :Raises: If the response contains an error message.
+        """
+        status = response.get("status", None)
+        if not status or status == ErrorCode.SUCCESS:
+            return
+        value = None
+        message = response.get("message", "")
+        screen: str = response.get("screen", "")
+        stacktrace = None
+        if isinstance(status, int):
+            value_json = response.get("value", None)
+            if value_json and isinstance(value_json, str):
+                import json
+    
+                try:
+                    value = json.loads(value_json)
+                    if len(value) == 1:
+                        value = value["value"]
+                    status = value.get("error", None)
+                    if not status:
+                        status = value.get("status", ErrorCode.UNKNOWN_ERROR)
+                        message = value.get("value") or value.get("message")
+                        if not isinstance(message, str):
+                            value = message
+                            message = message.get("message")
+                    else:
+                        message = value.get("message", None)
+                except ValueError:
+                    pass
+    
+        exception_class: Type[WebDriverException]
+        e = ErrorCode()
+        error_codes = [item for item in dir(e) if not item.startswith("__")]
+        for error_code in error_codes:
+            error_info = getattr(ErrorCode, error_code)
+            if isinstance(error_info, list) and status in error_info:
+                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)
+                break
+        else:
+            exception_class = WebDriverException
+    
+        if not value:
+            value = response["value"]
+        if isinstance(value, str):
+            raise exception_class(value)
+        if message == "" and "message" in value:
+            message = value["message"]
+    
+        screen = None  # type: ignore[assignment]
+        if "screen" in value:
+            screen = value["screen"]
+    
+        stacktrace = None
+        st_value = value.get("stackTrace") or value.get("stacktrace")
+        if st_value:
+            if isinstance(st_value, str):
+                stacktrace = st_value.split("\n")
+            else:
+                stacktrace = []
+                try:
+                    for frame in st_value:
+                        line = frame.get("lineNumber", "")
+                        file = frame.get("fileName", "<anonymous>")
+                        if line:
+                            file = f"{file}:{line}"
+                        meth = frame.get("methodName", "<anonymous>")
+                        if "className" in frame:
+                            meth = f"{frame['className']}.{meth}"
+                        msg = "    at %s (%s)"
+                        msg = msg % (meth, file)
+                        stacktrace.append(msg)
+                except TypeError:
+                    pass
+        if exception_class == UnexpectedAlertPresentException:
+            alert_text = None
+            if "data" in value:
+                alert_text = value["data"].get("text")
+            elif "alert" in value:
+                alert_text = value["alert"].get("text")
+            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here
+>       raise exception_class(message, screen, stacktrace)
+E       selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="ta"]"}
+E         (Session info: chrome=134.0.6998.89); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+E       Stacktrace:
+E       	GetHandleVerifier [0x00007FF75D0FFE45+26629]
+E       	(No symbol) [0x00007FF75D066010]
+E       	(No symbol) [0x00007FF75CEF931A]
+E       	(No symbol) [0x00007FF75CF4F8E7]
+E       	(No symbol) [0x00007FF75CF4FB1C]
+E       	(No symbol) [0x00007FF75CFA34A7]
+E       	(No symbol) [0x00007FF75CF77AEF]
+E       	(No symbol) [0x00007FF75CFA0169]
+E       	(No symbol) [0x00007FF75CF77883]
+E       	(No symbol) [0x00007FF75CF40550]
+E       	(No symbol) [0x00007FF75CF41803]
+E       	GetHandleVerifier [0x00007FF75D4572BD+3529853]
+E       	GetHandleVerifier [0x00007FF75D46DA22+3621858]
+E       	GetHandleVerifier [0x00007FF75D4624D3+3575443]
+E       	GetHandleVerifier [0x00007FF75D1CB77A+860474]
+E       	(No symbol) [0x00007FF75D07088F]
+E       	(No symbol) [0x00007FF75D06CBC4]
+E       	(No symbol) [0x00007FF75D06CD66]
+E       	(No symbol) [0x00007FF75D05C2C9]
+E       	BaseThreadInitThunk [0x00007FF8A2BE259D+29]
+E       	RtlUserThreadStart [0x00007FF8A38AAF38+40]
+
+C:\Users\Suresh\AppData\Local\Programs\Python\Python311\Lib\site-packages\selenium\webdriver\remote\errorhandler.py:229: NoSuchElementException
+=========================== short test summary info ===========================
+FAILED test1.py::test1_open_browser_url - selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="ta"]"}
+  (Session info: chrome=134.0.6998.89); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF75D0FFE45+26629]
+	(No symbol) [0x00007FF75D066010]
+	(No symbol) [0x00007FF75CEF931A]
+	(No symbol) [0x00007FF75CF4F8E7]
+	(No symbol) [0x00007FF75CF4FB1C]
+	(No symbol) [0x00007FF75CFA34A7]
+	(No symbol) [0x00007FF75CF77AEF]
+	(No symbol) [0x00007FF75CFA0169]
+	(No symbol) [0x00007FF75CF77883]
+	(No symbol) [0x00007FF75CF40550]
+	(No symbol) [0x00007FF75CF41803]
+	GetHandleVerifier [0x00007FF75D4572BD+3529853]
+	GetHandleVerifier [0x00007FF75D46DA22+3621858]
+	GetHandleVerifier [0x00007FF75D4624D3+3575443]
+	GetHandleVerifier [0x00007FF75D1CB77A+860474]
+	(No symbol) [0x00007FF75D07088F]
+	(No symbol) [0x00007FF75D06CBC4]
+	(No symbol) [0x00007FF75D06CD66]
+	(No symbol) [0x00007FF75D05C2C9]
+	BaseThreadInitThunk [0x00007FF8A2BE259D+29]
+	RtlUserThreadStart [0x00007FF8A38AAF38+40]
+============================= 1 failed in 16.87s ==============================
+
+>       raise exception_class(message, screen, stacktrace)
+E       selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[id="ta"]"}
+E         (Session info: chrome=134.0.6998.89); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+E       Stacktrace:
+E               GetHandleVerifier [0x00007FF63165FE45+26629]
+E               (No symbol) [0x00007FF6315C6010]
+E               (No symbol) [0x00007FF63145931A]
+E               (No symbol) [0x00007FF6314AF8E7]
+E               (No symbol) [0x00007FF6314AFB1C]
+E               (No symbol) [0x00007FF6315034A7]
+E               (No symbol) [0x00007FF6314D7AEF]
+E               (No symbol) [0x00007FF631500169]
+E               (No symbol) [0x00007FF6314D7883]
+E               (No symbol) [0x00007FF6314A0550]
+E               (No symbol) [0x00007FF6314A1803]
+E               GetHandleVerifier [0x00007FF6319B72BD+3529853]
+E               GetHandleVerifier [0x00007FF6319CDA22+3621858]
+E               GetHandleVerifier [0x00007FF6319C24D3+3575443]
+E               GetHandleVerifier [0x00007FF63172B77A+860474]
+E               (No symbol) [0x00007FF6315D088F]
+E               (No symbol) [0x00007FF6315CCBC4]
+E               (No symbol) [0x00007FF6315CCD66]
+E               (No symbol) [0x00007FF6315BC2C9]
+E               BaseThreadInitThunk [0x00007FF8A2BE259D+29]
+E               RtlUserThreadStart [0x00007FF8A38AAF38+40]
+
+C:\Users\Suresh\AppData\Local\Programs\Python\Python311\Lib\site-packages\selenium\webdriver\remote\errorhandler.py:229: NoSuchElementException
+
+During handling of the above exception, another exception occurred:
+
+    def test1_open_browser_url():
+        print("TEST NAME: test1_open_browser_url")
+        text_box = "ta"
+        driver = webdriver.Chrome()
+        driver.get("https://omayo.blogspot.com/")
+        driver.maximize_window()
+        time.sleep(10)
+        try:
+            element = driver.find_element(By.ID, text_box)
+            element.send_keys("This is for testing..")
+        except Exception as err:
+>           raise Exception("RuntimeError no such element Unable to locate element")
+E           Exception: RuntimeError no such element Unable to locate element
+
+test1.py:26: Exception
+------------------------------------------------ Captured stdout call -------------------------------------------------
+TEST NAME: test1_open_browser_url
+=============================================== short test summary info ===============================================
+FAILED test1.py::test1_open_browser_url - Exception: RuntimeError no such element Unable to locate element
+================================================= 1 failed in 16.36s ==================================================
+
+C:\Users\Suresh\Documents\BITS_WILP\BITS_AIML_Course_documents\Semester_4\failure_analysis_tool\testcases>
