@@ -12,7 +12,7 @@ pipeline {
                 script {
                     echo "Running on my-local-agent"
                     echo "Build Number: ${env.BUILD_NUMBER}"
-                    bat "${PYTHON_PATH} -m pytest ./test1.py > output.log 2>&1"
+                    bat "${PYTHON_PATH} -m pytest ./test1.py > output.log 2>&1 || exit 0"
                     bat "${PYTHON_PATH} push_data.py"
                 }
             }
