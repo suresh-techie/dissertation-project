@@ -17,8 +17,5 @@ driver.maximize_window()
 # driver.implicitly_wait(10)
 import time
 time.sleep(10)
-try:
-    driver.find_element(By.ID, text_box).send_keys("testing..")
-except NoSuchElementException:
-    print("ElementNotFound error")
+driver.find_element(By.ID, text_box).send_keys("testing..")
 time.sleep(10)

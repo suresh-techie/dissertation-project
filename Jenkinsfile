@@ -11,6 +11,8 @@ pipeline {
             steps {
                 script {
                     echo "Running on my-local-agent"
+                    echo "Current Build ID: ${env.BUILD_ID}"
+                    echo "Current Build Number: ${env.BUILD_NUMBER}"
 					bat 'C:\\Users\\Suresh\\AppData\\Local\\Programs\\Python\\Python311\\python.exe --version' 
 					bat 'C:\\Users\\Suresh\\AppData\\Local\\Programs\\Python\\Python311\\python.exe ./sample_test.py'
                     echo "${PYTHON_PATH} ${DIR_PATH}\\test1.py"
