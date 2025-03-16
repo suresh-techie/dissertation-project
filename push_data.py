@@ -4,14 +4,11 @@ import csv
 import re
 import os
 import nltk
-nltk_data_dir = "C:/nltk_data"
-nltk.data.path.append(nltk_data_dir)
-import sklearn
 
 # nltk_data_dir = "C:/nltk_data"
 
-nltk.download('stopwords', download_dir=nltk_data_dir, quiet=True)
-nltk.download('punkt_tab', download_dir=nltk_data_dir, quiet=True)
+# nltk.download('stopwords', download_dir=nltk_data_dir, quiet=True)
+# nltk.download('punkt_tab', download_dir=nltk_data_dir, quiet=True)
 
 import pickle
 
