@@ -6,14 +6,12 @@ import os
 import nltk
 import pickle
 
-
 nltk_data_dir = "C:\\nltk_data"
 nltk.data.path.append(nltk_data_dir)
-print(nltk.data.path)
 
 nltk.download('stopwords', download_dir=nltk_data_dir, quiet=True)
 nltk.download('punkt_tab', download_dir=nltk_data_dir, quiet=True)
-
+nltk.download("punkt", download_dir=nltk_data_dir, quiet=True)
 
 log_dir = r"output.log"
 failure_list = []
